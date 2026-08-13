@@ -2,8 +2,8 @@
 
 #include <vector>
 
-class Entity;
+class Drawable;
 
-extern std::vector<Entity*> globalDrawList;
+extern std::vector<Drawable*> globalDrawList;
 
-void draw_sprite(const char* texture, float x, float y, float scale);
+void draw_sprite(const char* texture, float x, float y, float depth);

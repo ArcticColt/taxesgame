@@ -18,7 +18,7 @@ pvr_ptr_t tex;
 std::vector<Drawable*> globalDrawList;
 
 void load_texture(std::string texture){
-    TextureList texstruct = textures["koffiaRun"];
+    TextureList texstruct = textures[texture];
     tex = pvr_mem_malloc(texstruct.width * texstruct.height * 2);
     png_to_texture(texstruct.path, tex, texstruct.alphaType);
 }
