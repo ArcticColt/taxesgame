@@ -1,6 +1,6 @@
 
 TARGET = game.elf
-OBJS = game.o romdisk.o class/player.o class/drawable.o class/entity.o 
+OBJS = game.o romdisk.o class/player.o class/drawable.o class/entity.o class/enemy.o
 KOS_ROMDISK_DIR = romdisk
 
 all: rm-elf $(TARGET)

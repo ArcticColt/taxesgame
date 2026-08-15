@@ -9,5 +9,5 @@ public:
     float frame;
 
     void draw() override;
-    void update();
+    void update() override;
 };

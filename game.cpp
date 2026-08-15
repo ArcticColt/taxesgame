@@ -12,6 +12,7 @@
 #include "class/drawable.h"
 #include "class/entity.h"
 #include "class/player.h"
+#include "class/enemy.h"
 #include "romdisk/asset/texture/textureList.h"
 // #endregion
 
@@ -51,7 +52,8 @@ void draw_sprite(const char* texture, float x, float y, float depth, int width, 
 
     pvr_ptr_t tex = textures[textureMeta[texture].name];
 
-    pvr_poly_cxt_txr(&cxt, PVR_LIST_OP_POLY, texstruct.format, texstruct.width, texstruct.height, tex, PVR_FILTER_NEAREST);
+    pvr_poly_cxt_txr(&cxt, PVR_LIST_TR_POLY, texstruct.format, texstruct.width, texstruct.height, tex, PVR_FILTER_NEAREST);
+    
     pvr_poly_compile(&hdr, &cxt);
     pvr_prim(&hdr, sizeof(hdr));
 
@@ -91,11 +93,13 @@ void draw_sprite(const char* texture, float x, float y, float depth, int width, 
 
 void init_level(){
     Player *P1 = new Player();
+    Enemy *enemy = new Enemy();
 }
 
 int main(){
     pvr_init_defaults();
     load_texture("koffiaRun");
+    load_texture("sylveon");
     init_level();
     while(true)
     {
@@ -107,7 +111,7 @@ int main(){
         pvr_wait_ready();
         pvr_scene_begin();
 
-        pvr_list_begin(PVR_LIST_OP_POLY);
+        pvr_list_begin(PVR_LIST_TR_POLY);
 
         //main draw
         for (Drawable* drawable : globalDrawList)
