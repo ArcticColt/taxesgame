@@ -6,6 +6,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 // #region class
 #include "class/drawable.h"
@@ -14,17 +15,35 @@
 #include "romdisk/asset/texture/textureList.h"
 // #endregion
 
-pvr_ptr_t tex;
+uint32_t vramUsage = 0;
+uint32_t vramUsageMax = 1572864;
+
+std::unordered_map<std::string, pvr_ptr_t> textures = {};
+
 std::vector<Drawable*> globalDrawList;
 
-void load_texture(std::string texture){
-    TextureList texstruct = textures[texture];
-    tex = pvr_mem_malloc(texstruct.width * texstruct.height * 2);
-    png_to_texture(texstruct.path, tex, texstruct.alphaType);
+uint8_t load_texture(std::string texture){
+    TextureList texstruct = textureMeta[texture];
+    uint32_t vramTest = (texstruct.width * texstruct.height) * 2;
+    if ((vramUsage + vramTest) <= vramUsageMax)
+    {
+        //make new texture
+        pvr_ptr_t tex;
+        //alocate space for it
+        tex = pvr_mem_malloc(texstruct.width * texstruct.height * 2);
+        //convert the png to bitmap format
+        png_to_texture(texstruct.path, tex, texstruct.alphaType);
+        //put tex in te
+        textures[texture] = tex;
+        vramUsage += vramTest;
+        return 0;
+    }
+    else
+    return 2;
 }
 
 void draw_sprite(const char* texture, float x, float y, float depth){
-    TextureList texstruct = textures[texture];
+    TextureList texstruct = textureMeta[texture];
 
     pvr_poly_cxt_t cxt;
     pvr_poly_hdr_t hdr;
@@ -32,6 +51,8 @@ void draw_sprite(const char* texture, float x, float y, float depth){
 
     int width = texstruct.width;
     int height = texstruct.height;
+
+    pvr_ptr_t tex = textures[textureMeta[texture].name];
 
     pvr_poly_cxt_txr(&cxt, PVR_LIST_OP_POLY, texstruct.format, width, height, tex, PVR_FILTER_NEAREST);
     pvr_poly_compile(&hdr, &cxt);

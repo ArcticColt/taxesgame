@@ -6,7 +6,7 @@
 class Player : public Entity, public Drawable {
 public:
     Player();
-    int frame;
+    float frame;
 
     void draw() override;
     void update();
