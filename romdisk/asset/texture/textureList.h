@@ -18,5 +18,5 @@ std::unordered_map<std::string, TextureList> textureMeta = {
     #define PNG_MASK_ALPHA 1
     #define PNG_FULL_ALPHA 2*/
     {"koffiaRun", {"koffiaRun", "/rd/asset/texture/koffiaRunning.png", 512, 32, PVR_TXRFMT_ARGB1555, 1}},
-    {"sylveon", {"sylveon", "/rd/asset/texture/sylveon.png", 1024, 512, PVR_TXRFMT_RGB565, 0}}
+    {"enemy1", {"enemy1", "/rd/asset/texture/enemy1.png", 32, 32, PVR_TXRFMT_ARGB1555, 1}}
 };

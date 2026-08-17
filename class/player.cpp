@@ -1,3 +1,5 @@
+#include <kos.h>
+
 #include "../game.h"
 #include "player.h"
 #include "drawable.h"
@@ -11,6 +13,8 @@ Player::Player()
     globalUpdateList.push_back(this);
     x = 160;
     y = 160;
+    port = 0;
+    speed = 4;
 }
 
 void Player::draw(){
@@ -24,4 +28,15 @@ void Player::update(){
     frame += 0.35f;
     if (frame >= 12.0f)
         frame -= 12.0f;
+    MAPLE_FOREACH_BEGIN(MAPLE_FUNC_CONTROLLER, cont_state_t, t)
+
+    if(t->joyx != 0) {
+        x += joyx*speed;
+    }
+    if(t->joyy != 0) {
+        y += joyy*speed;
+    }
+    }
+
+    MAPLE_FOREACH_END()
 }

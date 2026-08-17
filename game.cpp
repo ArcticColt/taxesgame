@@ -52,7 +52,7 @@ void draw_sprite(const char* texture, float x, float y, float depth, int width, 
 
     pvr_ptr_t tex = textures[textureMeta[texture].name];
 
-    pvr_poly_cxt_txr(&cxt, PVR_LIST_TR_POLY, texstruct.format, texstruct.width, texstruct.height, tex, PVR_FILTER_NEAREST);
+    pvr_poly_cxt_txr(&cxt, PVR_LIST_TR_POLY, PVR_TXRFMT_ARGB1555, texstruct.width, texstruct.height, tex, PVR_FILTER_NEAREST);
     
     pvr_poly_compile(&hdr, &cxt);
     pvr_prim(&hdr, sizeof(hdr));
@@ -99,7 +99,7 @@ void init_level(){
 int main(){
     pvr_init_defaults();
     load_texture("koffiaRun");
-    load_texture("sylveon");
+    load_texture("enemy1");
     init_level();
     while(true)
     {
