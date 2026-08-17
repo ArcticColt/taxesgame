@@ -9,6 +9,7 @@ public:
     float frame;
     int8_t port;
     float speed;
+    float health;
 
     void draw() override;
     void update() override;

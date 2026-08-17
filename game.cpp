@@ -93,6 +93,9 @@ void draw_sprite(const char* texture, float x, float y, float depth, int width, 
 
 void init_level(){
     Player *P1 = new Player();
+    Player *P2;
+    Player *P3;
+    Player *P4;
     Enemy *enemy = new Enemy();
 }
 
@@ -121,4 +124,8 @@ int main(){
         pvr_scene_finish();
     }
     return 0;
+}
+
+Player get_nearest_player(float x, float y){
+
 }
