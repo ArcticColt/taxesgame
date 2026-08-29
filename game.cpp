@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <tuple>
+#include <math.h>
 
 // #region class
 #include "class/drawable.h"
@@ -16,6 +18,7 @@
 #include "romdisk/asset/texture/textureList.h"
 // #endregion
 
+
 uint32_t vramUsage = 0;
 uint32_t vramUsageMax = 1572864;
 
@@ -23,6 +26,7 @@ std::unordered_map<std::string, pvr_ptr_t> textures = {};
 
 std::vector<Drawable*> globalDrawList;
 std::vector<Entity*> globalUpdateList;
+std::vector<Player*> players;
 
 uint8_t load_texture(std::string texture){
     TextureList texstruct = textureMeta[texture];
@@ -93,9 +97,9 @@ void draw_sprite(const char* texture, float x, float y, float depth, int width, 
 
 void init_level(){
     Player *P1 = new Player();
-    Player *P2;
-    Player *P3;
-    Player *P4;
+    Player *P2 = nullptr;
+    Player *P3 = nullptr;
+    Player *P4 = nullptr;
     Enemy *enemy = new Enemy();
 }
 
@@ -126,6 +130,31 @@ int main(){
     return 0;
 }
 
-Player get_nearest_player(float x, float y){
+std::tuple<float, float> vectorNormalize(std::tuple<float, float> tup){
+    float xx = std::get<0>(tup) * 2;
+    float yy = std::get<1>(tup) * 2;
 
+}
+
+Player* getNearestPlayer(float x, float y){
+    std::vector<std::tuple<Player*, float>> validPlayers;
+    for (Player* player : players){
+        if (player->dead == false)
+        {
+            float dist = hypot(x - player->x, y - player->y);
+            validPlayers.push_back({player, dist});
+        }
+    }
+    Player* retPlyr = nullptr;
+    float retDist = 1000000000.0;
+    for (std::tuple<Player*, float> info : validPlayers)
+        {
+            float testDist = std::get<1>(info);
+            if (testDist < retDist)
+            {
+                retPlyr = std::get<0>(info);
+                retDist = std::get<1>(info);
+            }
+        }
+    return retPlyr;
 }

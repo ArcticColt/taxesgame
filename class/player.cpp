@@ -11,11 +11,13 @@ Player::Player()
     frame = 0.0f;
     globalDrawList.push_back(this);
     globalUpdateList.push_back(this);
+    players.push_back(this);
     x = 160;
     y = 160;
     port = 0;
     speed = 0.03125;
     health = 10;
+    dead = false;
 }
 
 void Player::draw(){
