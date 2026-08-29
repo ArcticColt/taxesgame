@@ -25,7 +25,7 @@ void Enemy::update(){
     if (frame >= 12.0f)
         frame -= 12.0f;
     Player* plyr = getNearestPlayer(x, y);
-    std::tuple<float, float> mov = vectorNormalize({plyr->x - x, plyr->y - y})
+    std::tuple<float, float> mov = vectorNormalize({plyr->x - x, plyr->y - y});
     x += std::get<0>(mov);
     y += std::get<1>(mov);
 }
