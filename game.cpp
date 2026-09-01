@@ -15,12 +15,15 @@
 #include "class/entity.h"
 #include "class/player.h"
 #include "class/enemy.h"
+#include "class/level.h"
 #include "romdisk/asset/texture/textureList.h"
 // #endregion
 
 
 uint32_t vramUsage = 0;
 uint32_t vramUsageMax = 1572864;
+
+Level level;
 
 std::unordered_map<std::string, pvr_ptr_t> textures = {};
 
@@ -96,11 +99,7 @@ void draw_sprite(const char* texture, float x, float y, float depth, int width, 
 }
 
 void init_level(){
-    Player *P1 = new Player();
-    Player *P2 = nullptr;
-    Player *P3 = nullptr;
-    Player *P4 = nullptr;
-    Enemy *enemy = new Enemy();
+    level.init();
 }
 
 int main(){
@@ -110,7 +109,7 @@ int main(){
     init_level();
     while(true)
     {
-
+        level.update();
         //run Update()
         for (Entity* entity : globalUpdateList)
             entity->update();
@@ -131,9 +130,16 @@ int main(){
 }
 
 std::tuple<float, float> vectorNormalize(std::tuple<float, float> tup){
-    float xx = std::get<0>(tup) * 2;
-    float yy = std::get<1>(tup) * 2;
-
+    float x = std::get<0>(tup);
+    float y = std::get<1>(tup);
+    float xx = x * x;
+    float yy = y * y;
+    float sum = xx + yy;
+    float sq = std::sqrt(sum);
+    if (sq <= 0.0001f)
+        return {0.0f, 0.0f};
+    std::tuple<float, float> answ = {x / sq, y / sq};
+    return answ;
 }
 
 Player* getNearestPlayer(float x, float y){
