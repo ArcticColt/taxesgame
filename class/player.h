@@ -12,7 +12,10 @@ public:
     int8_t port;
     float speed;
     float health;
+    float joyx;
+    float joyy;
     bool dead;
+    float moveAngle;
 
     void draw() override;
     void update() override;

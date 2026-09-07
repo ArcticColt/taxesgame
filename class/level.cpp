@@ -10,15 +10,16 @@ Level::Level()
     currencyTimerReset = 1.0f;
     currencyTimer = currencyTimerReset;//how long until we add money to the currency amount
     currencyTimerLossRate = 0.1f;
+    currencyAdd = 10.0f;//how much currency to add when invoked
 }
 
 void Level::init()
 {
-    Player *P1;
-    Player *P2 = nullptr;
-    Player *P3 = nullptr;
-    Player *P4 = nullptr;
-    Enemy *enemy;
+    P1 = new Player();
+    P2 = nullptr;
+    P3 = nullptr;
+    P4 = nullptr;
+    Enemy *enemy = new Enemy();
 }
 
 void Level::update()

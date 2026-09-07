@@ -14,10 +14,13 @@ Player::Player()
     players.push_back(this);
     x = 160;
     y = 160;
+    joyx = 0.0f;
+    joyy = 0.0f;
     port = 0;
-    speed = 0.03125;
+    speed = 2;//0.03125;
     health = 10;
     dead = false;
+    moveAngle = 0.70710677;
 }
 
 void Player::draw(){
@@ -25,6 +28,9 @@ void Player::draw(){
     float spriteUHead = float(int(frame) % 6) * 0.03125f;
     draw_sprite("koffiaRun", x, y, 1.0f, 32, 32, spriteU, 0.0f, 0.0625f, 1.0f);
     draw_sprite("koffiaRun", x+10, y-16, 1.0f, 16, 16, 0.75+spriteUHead, 0.5f, 0.03125f, 0.5f);
+
+    //rotate gun
+//0.70710677
 }
 
 void Player::update(){
@@ -33,15 +39,70 @@ void Player::update(){
         frame -= 12.0f;
     MAPLE_FOREACH_BEGIN(MAPLE_FUNC_CONTROLLER, cont_state_t, t)
 
-        float joyx = t->joyx;
-        float joyy = t->joyy;
+        joyx = t->joyx;
+        joyy = t->joyy;
 
-        if(joyx != 0) {
-            x += joyx*speed;
+
+        bool u = t->buttons & CONT_Y;
+        bool d = t->buttons & CONT_A;
+        bool l = t->buttons & CONT_X;
+        bool r = t->buttons & CONT_B;
+
+        if (u || d || l || r)
+        {
+            int8_t field = u | d << 1| l << 2 | r << 3;
+            switch (field)
+            {
+                //up
+                case 0b1011:
+                case 0b1000:
+                    y -= speed;
+                break;
+
+                //up right
+                case 0b1001:
+                    x += speed*moveAngle;
+                    y -= speed*moveAngle;
+                break;
+
+                //right
+                case 0b1101:
+                case 0b0001:
+                    x += speed;
+                break;
+
+                //down right
+                case 0b0101:
+                    x += speed*moveAngle;
+                    y += speed*moveAngle;
+                break;
+
+                //down
+                case 0b0100:
+                case 0b0111:
+                    y += speed;
+                break;
+
+                //down left
+                case 0b0110:
+                    x -= speed*moveAngle;
+                    y += speed*moveAngle;
+                break;
+
+                //left
+                case 0b1110:
+                case 0b0010:
+                    x -= speed;
+                break;
+
+                //up left
+                case 0b1010:
+                    x -= speed*moveAngle;
+                    y -= speed*moveAngle;
+                break;
+            }
         }
-        if(joyy != 0) {
-            y += joyy*speed;
-        }
+        
 
     MAPLE_FOREACH_END()
 }
