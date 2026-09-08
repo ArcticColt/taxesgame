@@ -2,6 +2,8 @@
 
 #include "player.h"
 
+#include <string>
+
 
 
 class Player;
@@ -19,9 +21,11 @@ public:
     Player *P2;
     Player *P3;
     Player *P4;
+    std::string floorTex;
 
 
     void init();
+    void draw();
     void update();
     void spawnAdds();
     void addCurrency();

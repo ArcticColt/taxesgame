@@ -20,15 +20,38 @@ void Level::init()
     P3 = nullptr;
     P4 = nullptr;
     Enemy *enemy = new Enemy();
+    switch (level)
+    {
+        //1
+        default:
+            load_texture("BGDLevel1");
+            floorTex = "BGDLevel1";
+        break;
+    }
 }
 
 void Level::update()
 {
+
+
+
     currencyTimer -= currencyTimerLossRate;
     if (currencyTimer <= 0)
     {
         currencyTimer += currencyTimerReset;
         addCurrency();
+    }
+}
+
+void Level::draw()
+{
+    //draw the floor
+    for (int8_t x = 0; x < 5; x ++)
+    {
+        for (int8_t y = 0; y < 5; y ++)
+        {
+            draw_sprite("BGDLevel1", 32*x, 32*y, 1.0f);
+        }
     }
 }
 

@@ -50,7 +50,7 @@ void Player::update(){
 
         if (u || d || l || r)
         {
-            int8_t field = u | d << 1| l << 2 | r << 3;
+            int8_t field = r | l << 1| d << 2 | u << 3;
             switch (field)
             {
                 //up
