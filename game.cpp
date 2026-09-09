@@ -57,7 +57,7 @@ uint8_t load_texture(std::string texture){
         pvr_ptr_t tex;
         //alocate space for it
         tex = pvr_mem_malloc(texstruct.width * texstruct.height * 2);
-        png_to_texture(texstruct.path, tex, PNG_FULL_ALPHA);
+        png_to_texture(texstruct.path, tex, PNG_MASK_ALPHA);
         //put tex in texture list
         textures[texture] = tex;
         vramUsage += vramTest;

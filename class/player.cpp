@@ -107,6 +107,6 @@ void Player::update(){
 
     MAPLE_FOREACH_END()
 
-    camera.x = x - 304;
-    camera.y = y - 216;
+    camera.x = x - 144;//304 fullsscreen 144 corner
+    camera.y = y - 96;//216 fullscreen 96 corner
 }

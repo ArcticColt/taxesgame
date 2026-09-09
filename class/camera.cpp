@@ -6,20 +6,32 @@
 
 Camera::Camera()
 {
-    x = 0;
+    x = 0;//position in-level
     y = 0;
-    hpos = 0;
-    vpos = 0;
-    wid = 320.0f;
-    hig = 240.0f;
+    hpos = 0.0f;//position on-screen
+    vpos = 0.0f;
+    wid = 640.0f;//size
+    hig = 480.0f;
 }
 
 void Camera::draw()
 {
     for (drawStruct tex : drawList){
         //test left boundary
-        //if ((tex.x + tex.width))
-        _draw_texture(tex.texture, tex.x - int(x) + hpos, tex.y - int(y) + vpos, tex.depth, tex.width, tex.height, tex.u, tex.v, tex.uwid, tex.vhig);
+        if ((tex.x + tex.width) > x)
+        {
+            //test top boundary
+            if ((tex.y + tex.height) > y)
+            {
+                //test right boundary
+                if (tex.x < (x+wid))
+                {
+                    //test bottom boundary
+                    if (tex.y < (y+hig))
+                        _draw_texture(tex.texture, tex.x - int(x) + hpos, tex.y - int(y) + vpos, tex.depth, tex.width, tex.height, tex.u, tex.v, tex.uwid, tex.vhig);
+                }
+            }
+        }
     }
 }
 
