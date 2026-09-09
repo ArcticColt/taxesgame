@@ -1,5 +1,6 @@
 #pragma once
 
+//#include <unordered_map>
 #include <vector>
 #include <tuple>
 #include <string>
@@ -10,9 +11,23 @@ class Drawable;
 class Entity;
 class Player;
 
+struct drawStruct{
+    const char* texture;
+    float x;
+    float y;
+    float depth;
+    int width;
+    int height;
+    float u;
+    float v;
+    float uwid;
+    float vhig;
+};
+
 extern std::vector<Drawable*> globalDrawList;
 extern std::vector<Entity*> globalUpdateList;
 extern std::vector<Player*> players;
+extern std::vector<drawStruct> drawList;
 
 uint8_t load_texture(std::string texture);
 void draw_sprite(const char* texture, float x, float y, float depth);

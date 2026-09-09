@@ -12,22 +12,24 @@ Player::Player()
     globalDrawList.push_back(this);
     globalUpdateList.push_back(this);
     players.push_back(this);
-    x = 160;
-    y = 160;
+    x = 160.0f;
+    y = 160.0f;
     joyx = 0.0f;
     joyy = 0.0f;
     port = 0;
-    speed = 2;//0.03125;
-    health = 10;
+    speed = 2.0f;//0.03125f;
+    health = 10.0f;
     dead = false;
     moveAngle = 0.70710677;
+    camera = new Camera();
 }
 
 void Player::draw(){
     float spriteU = float(int(frame)) * 0.0625f;
     float spriteUHead = float(int(frame) % 6) * 0.03125f;
-    draw_sprite("koffiaRun", x, y, 1.0f, 32, 32, spriteU, 0.0f, 0.0625f, 1.0f);
-    draw_sprite("koffiaRun", x+10, y-16, 1.0f, 16, 16, 0.75+spriteUHead, 0.5f, 0.03125f, 0.5f);
+    draw_sprite("koffiaRun", x, y, depth, 32, 32, spriteU, 0.0f, 0.0625f, 1.0f);
+    draw_sprite("koffiaRun", x+10, y-16, depth, 16, 16, 0.75+spriteUHead, 0.5f, 0.03125f, 0.5f);
+    depth = y;
 
     //rotate gun
 //0.70710677

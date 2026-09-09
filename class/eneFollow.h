@@ -6,9 +6,9 @@
 
 //class Player;
 
-class Enemy : public Entity, public Drawable {
+class EneFollow : public Entity, public Drawable {
 public:
-    Enemy();
+    EneFollow();
     float frame;
     float health;
     float speed;

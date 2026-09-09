@@ -14,14 +14,29 @@
 #include "class/drawable.h"
 #include "class/entity.h"
 #include "class/player.h"
-#include "class/enemy.h"
+#include "class/eneFollow.h"
 #include "class/level.h"
+#include "class/camera.h"
 #include "romdisk/asset/texture/textureList.h"
 // #endregion
 
 
+struct drawStruct{
+    const char* texture;
+    float x;
+    float y;
+    float depth;
+    int width;
+    int height;
+    float u;
+    float v;
+    float uwid;
+    float vhig;
+};
+
+
 uint32_t vramUsage = 0;
-uint32_t vramUsageMax = 1572864;
+uint32_t vramUsageMax = 6291456;//1572864;
 
 Level level;
 
@@ -30,6 +45,8 @@ std::unordered_map<std::string, pvr_ptr_t> textures = {};
 std::vector<Drawable*> globalDrawList;
 std::vector<Entity*> globalUpdateList;
 std::vector<Player*> players;
+
+std::vector<drawStruct> drawList;
 
 uint8_t load_texture(std::string texture){
     TextureList texstruct = textureMeta[texture];
@@ -40,7 +57,7 @@ uint8_t load_texture(std::string texture){
         pvr_ptr_t tex;
         //alocate space for it
         tex = pvr_mem_malloc(texstruct.width * texstruct.height * 2);
-        png_to_texture(texstruct.path, tex, texstruct.alphaType);
+        png_to_texture(texstruct.path, tex, PNG_FULL_ALPHA);
         //put tex in texture list
         textures[texture] = tex;
         vramUsage += vramTest;
@@ -50,100 +67,15 @@ uint8_t load_texture(std::string texture){
     return 2;
 }
 
-void draw_sprite(const char* texture, float x, float y, float depth){
+void draw_sprite(const char* texture, float x, float y, float depth)
+{
     TextureList texstruct = textureMeta[texture];
-
-    pvr_poly_cxt_t cxt;
-    pvr_poly_hdr_t hdr;
-    pvr_vertex_t vert;
-
-    pvr_ptr_t tex = textures[textureMeta[texture].name];
-
-    pvr_poly_cxt_txr(&cxt, PVR_LIST_TR_POLY, PVR_TXRFMT_ARGB1555, texstruct.width, texstruct.height, tex, PVR_FILTER_NEAREST);
-    
-    pvr_poly_compile(&hdr, &cxt);
-    pvr_prim(&hdr, sizeof(hdr));
-
-    vert.argb = PVR_PACK_COLOR(1.0f, 1.0f, 1.0f, 1.0f);
-    vert.oargb = 0;
-    vert.flags = PVR_CMD_VERTEX;
-
-    vert.x = x;
-    vert.y = y;
-    vert.z = depth;
-    vert.u = 0;
-    vert.v = 0;
-    pvr_prim(&vert, sizeof(vert));
-
-    vert.x = x+texstruct.width;
-    vert.y = y;
-    vert.z = depth;
-    vert.u = 1;
-    vert.v = 0;
-    pvr_prim(&vert, sizeof(vert));
-
-    vert.x = x;
-    vert.y = y+texstruct.height;
-    vert.z = depth;
-    vert.u = 0;
-    vert.v = 1;
-    pvr_prim(&vert, sizeof(vert));
-
-    vert.x = x+texstruct.width;
-    vert.y = y+texstruct.height;
-    vert.z = depth;
-    vert.u = 1;
-    vert.v = 1;
-    vert.flags = PVR_CMD_VERTEX_EOL;
-    pvr_prim(&vert, sizeof(vert));
+    drawList.push_back({texture, x, y, depth, texstruct.width, texstruct.height, 0.0f, 0.0f, 1.0f, 1.0f});
 }
 
-void draw_sprite(const char* texture, float x, float y, float depth, int width, int height, float u, float v, float uwid, float vhig){
-    TextureList texstruct = textureMeta[texture];
-
-    pvr_poly_cxt_t cxt;
-    pvr_poly_hdr_t hdr;
-    pvr_vertex_t vert;
-
-    pvr_ptr_t tex = textures[textureMeta[texture].name];
-
-    pvr_poly_cxt_txr(&cxt, PVR_LIST_TR_POLY, PVR_TXRFMT_ARGB1555, texstruct.width, texstruct.height, tex, PVR_FILTER_NEAREST);
-    
-    pvr_poly_compile(&hdr, &cxt);
-    pvr_prim(&hdr, sizeof(hdr));
-
-    vert.argb = PVR_PACK_COLOR(1.0f, 1.0f, 1.0f, 1.0f);
-    vert.oargb = 0;
-    vert.flags = PVR_CMD_VERTEX;
-
-    vert.x = x;
-    vert.y = y;
-    vert.z = depth;
-    vert.u = u;
-    vert.v = v;
-    pvr_prim(&vert, sizeof(vert));
-
-    vert.x = x+width;
-    vert.y = y;
-    vert.z = depth;
-    vert.u = u + uwid;
-    vert.v = v;
-    pvr_prim(&vert, sizeof(vert));
-
-    vert.x = x;
-    vert.y = y+height;
-    vert.z = depth;
-    vert.u = u;
-    vert.v = v + vhig;
-    pvr_prim(&vert, sizeof(vert));
-
-    vert.x = x+width;
-    vert.y = y+height;
-    vert.z = depth;
-    vert.u = u + uwid;
-    vert.v = v + vhig;
-    vert.flags = PVR_CMD_VERTEX_EOL;
-    pvr_prim(&vert, sizeof(vert));
+void draw_sprite(const char* texture, float x, float y, float depth, int width, int height, float u, float v, float uwid, float vhig)
+{
+    drawList.push_back({texture, x, y, depth, width, height, u, v, uwid, vhig});
 }
 
 void init_level(){
@@ -152,13 +84,12 @@ void init_level(){
 
 int main(){
     pvr_init_defaults();
-    load_texture("koffiaRun");
-    load_texture("enemy1");
     init_level();
     while(true)
     {
         level.update();
-        //run Update()
+
+        //run Update() on everything
         for (Entity* entity : globalUpdateList)
             entity->update();
 
@@ -171,6 +102,12 @@ int main(){
         level.draw();
         for (Drawable* drawable : globalDrawList)
             drawable->draw();
+
+
+
+        //after all the drawing calls, let the cameras do their jobs
+        for (Player* player : players)
+            player->camera.draw();
 
         pvr_list_finish();
         pvr_scene_finish();
@@ -201,7 +138,7 @@ Player* getNearestPlayer(float x, float y){
         }
     }
     Player* retPlyr = nullptr;
-    float retDist = 1000000000.0;
+    float retDist = 1000000000.0f;
     for (std::tuple<Player*, float> info : validPlayers)
         {
             float testDist = std::get<1>(info);

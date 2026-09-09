@@ -1,6 +1,8 @@
 #include "../game.h"
 #include "level.h"
-#include "enemy.h"
+#include "eneFollow.h"
+#include "eneTrapper.h"
+
 #include "player.h"
 
 Level::Level()
@@ -19,12 +21,16 @@ void Level::init()
     P2 = nullptr;
     P3 = nullptr;
     P4 = nullptr;
-    Enemy *enemy = new Enemy();
+    EneFollow *eneFollow = new EneFollow();
+    EneTrapper *eneTrapper = new EneTrapper();
+    load_texture("koffiaRun");
     switch (level)
     {
         //1
         default:
             load_texture("BGDLevel1");
+            load_texture("eneTrapper");
+            load_texture("enemy1");
             floorTex = "BGDLevel1";
         break;
     }
@@ -46,11 +52,11 @@ void Level::update()
 void Level::draw()
 {
     //draw the floor
-    for (int8_t x = 0; x < 5; x ++)
+    for (int8_t x = 0; x < 20; x ++)
     {
-        for (int8_t y = 0; y < 5; y ++)
+        for (int8_t y = 0; y < 15; y ++)
         {
-            draw_sprite("BGDLevel1", 32*x, 32*y, 1.0f);
+            draw_sprite("BGDLevel1", 32*x, 32*y, 0.9f);
         }
     }
 }
