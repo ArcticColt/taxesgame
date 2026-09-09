@@ -1,6 +1,8 @@
 #pragma once
 
-//#include <unordered_map>
+#include <kos.h>
+
+#include <unordered_map>
 #include <vector>
 #include <tuple>
 #include <string>
@@ -23,6 +25,8 @@ struct drawStruct{
     float uwid;
     float vhig;
 };
+
+extern std::unordered_map<std::string, pvr_ptr_t> textures;
 
 extern std::vector<Drawable*> globalDrawList;
 extern std::vector<Entity*> globalUpdateList;

@@ -88,7 +88,6 @@ int main(){
     while(true)
     {
         level.update();
-
         //run Update() on everything
         for (Entity* entity : globalUpdateList)
             entity->update();
@@ -109,6 +108,9 @@ int main(){
         for (Player* player : players)
             player->camera.draw();
 
+
+        //clear memory so stuff can MOVE instead of SNAKE
+        drawList.clear();
         pvr_list_finish();
         pvr_scene_finish();
     }

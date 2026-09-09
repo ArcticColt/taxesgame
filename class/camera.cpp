@@ -10,17 +10,20 @@ Camera::Camera()
     y = 0;
     hpos = 0;
     vpos = 0;
-    wid = 640;
-    hig = 480;
+    wid = 320.0f;
+    hig = 240.0f;
 }
 
-
-void draw()
+void Camera::draw()
 {
-
+    for (drawStruct tex : drawList){
+        //test left boundary
+        //if ((tex.x + tex.width))
+        _draw_texture(tex.texture, tex.x - int(x) + hpos, tex.y - int(y) + vpos, tex.depth, tex.width, tex.height, tex.u, tex.v, tex.uwid, tex.vhig);
+    }
 }
 
-void _draw_texture(const char* texture, float x, float y, float depth, int width, int height, float u, float v, float uwid, float vhig){
+void Camera::_draw_texture(const char* texture, float x, float y, float depth, int width, int height, float u, float v, float uwid, float vhig){
     TextureList texstruct = textureMeta[texture];
 
     pvr_poly_cxt_t cxt;

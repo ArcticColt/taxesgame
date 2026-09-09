@@ -3,6 +3,7 @@
 #include "../game.h"
 #include "player.h"
 #include "drawable.h"
+#include "camera.h"
 
 
 
@@ -21,7 +22,6 @@ Player::Player()
     health = 10.0f;
     dead = false;
     moveAngle = 0.70710677;
-    camera = new Camera();
 }
 
 void Player::draw(){
@@ -32,7 +32,6 @@ void Player::draw(){
     depth = y;
 
     //rotate gun
-//0.70710677
 }
 
 void Player::update(){
@@ -107,4 +106,7 @@ void Player::update(){
         
 
     MAPLE_FOREACH_END()
+
+    camera.x = x - 304;
+    camera.y = y - 216;
 }

@@ -13,7 +13,7 @@ struct TextureList{
 };
 
 //dictionary
-std::unordered_map<std::string, TextureList> textureMeta = {
+inline std::unordered_map<std::string, TextureList> textureMeta = {
     /*#define PNG_NO_ALPHA 0
     #define PNG_MASK_ALPHA 1
     #define PNG_FULL_ALPHA 2*/
